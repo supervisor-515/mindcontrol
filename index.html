@@ -1,0 +1,520 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>반증 장부</title>
+<meta name="description" content="머리 밖에 두는 정직한 회계 — 믿음의 예측을 잠그고 며칠 뒤 실제 결과와 대조하는 단일 파일 장부 앱.">
+<!-- PWA -->
+<link rel="manifest" href="manifest.webmanifest">
+<meta name="theme-color" content="#B65A40">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="반증 장부">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<link rel="icon" href="icon.svg" type="image/svg+xml">
+<link rel="icon" href="favicon-32.png" sizes="32x32" type="image/png">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@latest/dist/web/static/pretendard.css">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;1,9..144,400&display=swap" rel="stylesheet">
+<style>
+:root{
+  --paper:#F4EFE6; --ink:#2E2A24; --ink-2:#6B6357; --ink-3:#9A9082;
+  --clay:#B65A40; --clay-soft:#E7C7BD; --olive:#6E7355; --olive-soft:#D6D8C7;
+  --line:#E3DACB; --card:#FBF8F2; --shadow:0 1px 2px rgba(46,42,36,.05),0 6px 20px rgba(46,42,36,.04);
+  --r:14px;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{background:var(--paper);color:var(--ink);font-family:"Pretendard Variable",Pretendard,system-ui,sans-serif;-webkit-text-size-adjust:100%}
+body{
+  background-image:radial-gradient(circle at 20% 12%,rgba(182,90,64,.04),transparent 45%),radial-gradient(circle at 85% 78%,rgba(110,115,85,.05),transparent 50%);
+  background-attachment:fixed;line-height:1.55;padding:max(env(safe-area-inset-top),8px) 0 80px;
+}
+.wrap{max-width:600px;margin:0 auto;padding:0 16px}
+.serif{font-family:"Fraunces",Georgia,serif}
+button{font-family:inherit;cursor:pointer;border:none;background:none;color:inherit}
+input,textarea,select{font-family:inherit;font-size:16px;color:var(--ink)}
+textarea{resize:vertical;width:100%}
+
+/* header */
+header{padding:22px 0 14px;display:flex;align-items:baseline;justify-content:space-between;gap:10px;flex-wrap:wrap}
+header h1{font-family:"Fraunces",serif;font-weight:600;font-size:30px;letter-spacing:-.01em;line-height:1}
+header .sub{font-size:13px;color:var(--ink-2);margin-top:5px;font-style:italic;font-family:"Fraunces",serif}
+.topbtns{display:flex;gap:6px}
+.ghost{font-size:12.5px;color:var(--ink-2);padding:7px 11px;border:1px solid var(--line);border-radius:999px;background:var(--card)}
+.ghost:hover{border-color:var(--ink-3);color:var(--ink)}
+.ghost.accent{color:var(--clay);border-color:var(--clay-soft)}
+
+/* scoreboard */
+.board{background:var(--card);border:1px solid var(--line);border-radius:var(--r);box-shadow:var(--shadow);padding:18px 18px 16px;margin-bottom:18px}
+.board .lead{font-family:"Fraunces",serif;font-size:13px;color:var(--ink-2);letter-spacing:.02em;margin-bottom:14px}
+.statrow{display:flex;gap:14px;flex-wrap:wrap;margin-bottom:16px}
+.stat{flex:1;min-width:90px}
+.stat .num{font-family:"Fraunces",serif;font-size:26px;font-weight:600;line-height:1}
+.stat .num.clay{color:var(--clay)} .stat .num.olive{color:var(--olive)}
+.stat .lab{font-size:11.5px;color:var(--ink-3);margin-top:5px;letter-spacing:.01em}
+/* calibration signature */
+.cal{border-top:1px dashed var(--line);padding-top:14px}
+.cal .ct{font-size:11.5px;color:var(--ink-3);margin-bottom:9px}
+.calrow{display:flex;align-items:center;gap:9px;margin:6px 0;font-size:12.5px}
+.calrow .tag{width:104px;flex:none;color:var(--ink-2)}
+.calrow .barwrap{flex:1;height:9px;border-radius:5px;background:#ECE4D5;overflow:hidden}
+.calrow .bar{height:100%;border-radius:5px;transition:width .5s ease}
+.calrow .bar.belief{background:var(--clay)} .calrow .bar.real{background:var(--olive)}
+.calrow .pct{width:42px;flex:none;text-align:right;font-family:"Fraunces",serif;font-weight:500}
+.calverdict{font-size:12.5px;color:var(--ink-2);margin-top:11px;line-height:1.5}
+.calverdict b{color:var(--ink);font-weight:600}
+
+/* primary add */
+.add{display:block;width:100%;background:var(--clay);color:#fff;font-size:15px;font-weight:600;padding:15px;border-radius:var(--r);box-shadow:var(--shadow);margin-bottom:22px;letter-spacing:.01em}
+.add:hover{filter:brightness(1.04)}
+.add small{display:block;font-weight:400;font-size:12px;opacity:.85;margin-top:3px}
+
+/* groups */
+.group{margin-bottom:20px}
+.ghd{display:flex;align-items:center;gap:8px;font-size:12px;color:var(--ink-3);letter-spacing:.06em;text-transform:uppercase;margin:0 2px 9px}
+.ghd::after{content:"";flex:1;height:1px;background:var(--line)}
+.ghd.alert{color:var(--clay)} .ghd.alert::after{background:var(--clay-soft)}
+
+/* cards */
+.card{background:var(--card);border:1px solid var(--line);border-radius:var(--r);box-shadow:var(--shadow);padding:14px 15px;margin-bottom:9px;cursor:pointer;transition:transform .08s ease,border-color .15s}
+.card:hover{border-color:var(--ink-3)} .card:active{transform:scale(.995)}
+.card .choice{font-size:15px;font-weight:500;line-height:1.4}
+.card .meta{display:flex;align-items:center;gap:8px;margin-top:8px;flex-wrap:wrap}
+.badge{font-size:11px;padding:3px 9px;border-radius:999px;font-weight:600;letter-spacing:.01em}
+.b-wait{background:#EFE9DC;color:var(--ink-2)}
+.b-need{background:var(--clay);color:#fff}
+.b-miss{background:var(--olive-soft);color:#41452f}
+.b-part{background:#EDE7D8;color:var(--ink-2)}
+.b-hit{background:var(--clay-soft);color:#7a3522}
+.card .date{font-size:11.5px;color:var(--ink-3)}
+.dot{color:var(--ink-3);font-size:11px}
+.rejmark{font-size:11px;color:var(--olive);font-weight:600}
+
+/* empty */
+.empty{text-align:center;padding:36px 18px;color:var(--ink-2)}
+.empty .big{font-family:"Fraunces",serif;font-size:19px;color:var(--ink);margin-bottom:6px}
+.empty p{font-size:13.5px;line-height:1.6}
+
+/* form screen */
+.screen{padding-top:6px}
+.back{font-size:13px;color:var(--ink-2);padding:7px 0;margin-bottom:6px;display:inline-flex;gap:5px;align-items:center}
+.back:hover{color:var(--ink)}
+.stitle{font-family:"Fraunces",serif;font-size:23px;font-weight:600;margin-bottom:4px}
+.shint{font-size:13px;color:var(--ink-2);margin-bottom:20px;line-height:1.5}
+.field{margin-bottom:18px}
+.field label{display:block;font-size:13px;font-weight:600;margin-bottom:7px}
+.field .desc{font-size:12px;color:var(--ink-3);font-weight:400;margin-top:-3px;margin-bottom:7px}
+.field input[type=text],.field textarea,.field input[type=date]{width:100%;background:var(--paper);border:1px solid var(--line);border-radius:10px;padding:11px 12px}
+.field input:focus,.field textarea:focus{outline:none;border-color:var(--clay)}
+.field textarea{min-height:62px}
+.confwrap{display:flex;align-items:center;gap:12px}
+.confwrap input[type=range]{flex:1;accent-color:var(--clay)}
+.confval{font-family:"Fraunces",serif;font-weight:600;font-size:18px;width:58px;text-align:right;color:var(--clay)}
+.save{width:100%;background:var(--clay);color:#fff;font-weight:600;font-size:15px;padding:14px;border-radius:var(--r);margin-top:6px}
+.save:hover{filter:brightness(1.04)} .save:disabled{opacity:.4;cursor:not-allowed}
+.save.olive{background:var(--olive)}
+
+/* locked box */
+.locked{background:#F0EADD;border:1px solid var(--line);border-radius:12px;padding:13px 14px;margin-bottom:18px;position:relative}
+.locked .lk{position:absolute;top:11px;right:12px;font-size:11px;color:var(--ink-3)}
+.locked .ll{font-size:11.5px;color:var(--ink-3);margin-bottom:5px}
+.locked .lv{font-size:14.5px;line-height:1.5}
+.locked .lconf{font-size:12px;color:var(--ink-2);margin-top:8px}
+
+/* verdict picker */
+.vpick{display:flex;gap:8px}
+.vpick button{flex:1;border:1px solid var(--line);background:var(--paper);border-radius:10px;padding:11px 4px;font-size:13px;font-weight:600;color:var(--ink-2)}
+.vpick button[aria-pressed=true]{border-color:var(--clay);background:var(--clay-soft);color:#7a3522}
+.toggle{display:flex;gap:8px}
+.toggle button{flex:1;border:1px solid var(--line);background:var(--paper);border-radius:10px;padding:10px;font-size:13px;font-weight:600;color:var(--ink-2)}
+.toggle button[aria-pressed=true]{border-color:var(--olive);background:var(--olive-soft);color:#41452f}
+
+/* reclass block */
+.reclass{background:#FAF4EA;border:1px dashed var(--clay-soft);border-radius:12px;padding:15px;margin-top:6px}
+.reclass .rh{font-size:13px;font-weight:600;margin-bottom:5px}
+.reclass .rd{font-size:12px;color:var(--ink-2);margin-bottom:11px;line-height:1.5}
+.rejbtn{width:100%;background:var(--olive);color:#fff;font-weight:600;padding:11px;border-radius:10px;margin-top:11px;font-size:14px}
+.rejbtn[aria-pressed=true]{background:#41452f}
+.rejbtn[aria-pressed=true]::before{content:"✓ "}
+
+/* detail */
+.compare{display:flex;gap:10px;margin-bottom:16px}
+.compare .col{flex:1;background:var(--card);border:1px solid var(--line);border-radius:12px;padding:13px}
+.compare .col.real{background:#F2F1E8}
+.compare .ch{font-size:11.5px;color:var(--ink-3);margin-bottom:7px;letter-spacing:.02em}
+.compare .cb{font-size:14px;line-height:1.5;white-space:pre-wrap;word-break:break-word}
+.dsec{margin-bottom:15px}
+.dsec .dl{font-size:12px;color:var(--ink-3);margin-bottom:4px}
+.dsec .dv{font-size:14px;line-height:1.5;white-space:pre-wrap;word-break:break-word}
+.rejcard{background:#F2F4EA;border:1px solid var(--olive-soft);border-radius:12px;padding:13px;margin-bottom:15px}
+.danger{font-size:12.5px;color:var(--ink-3);padding:8px 12px;border:1px solid var(--line);border-radius:999px;background:var(--card)}
+.danger:hover{color:var(--clay);border-color:var(--clay-soft)}
+.detailbtns{display:flex;gap:8px;justify-content:flex-end;margin-top:22px}
+.note{font-size:11.5px;color:var(--ink-3);text-align:center;margin-top:18px;line-height:1.6}
+.warn{background:var(--clay-soft);color:#7a3522;font-size:12.5px;padding:10px 13px;border-radius:10px;margin-bottom:14px}
+</style>
+</head>
+<body>
+<div class="wrap" id="app"></div>
+<input type="file" id="importer" accept="application/json" style="display:none">
+
+<script>
+"use strict";
+const KEY="counter-ledger-v1";
+let data=load();
+let state={view:"home",id:null,showArchive:false};
+let deferredPrompt=null;   // PWA 설치 프롬프트
+let canInstall=false;
+
+function load(){
+  try{const raw=localStorage.getItem(KEY);return raw?JSON.parse(raw):[];}
+  catch(e){return [];}
+}
+let storageBlocked=false;
+function persist(){
+  try{localStorage.setItem(KEY,JSON.stringify(data));storageBlocked=false;}
+  catch(e){storageBlocked=true;}
+}
+function uid(){return (crypto.randomUUID?crypto.randomUUID():"id-"+Date.now()+"-"+Math.random().toString(36).slice(2));}
+function todayStr(){const d=new Date();return ymd(d);}
+function ymd(d){return d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+String(d.getDate()).padStart(2,"0");}
+function plusDays(n){const d=new Date();d.setDate(d.getDate()+n);return ymd(d);}
+function esc(s){return (s==null?"":String(s)).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));}
+function fmtDate(s){if(!s)return "";const[y,m,d]=s.split("-");return `${+m}월 ${+d}일`;}
+
+function statusOf(e){
+  if(e.outcome!=null) return "done";
+  if(e.reviewDate && e.reviewDate<=todayStr()) return "need";
+  return "wait";
+}
+
+function active(){return data.filter(e=>!e.archived);}
+function stats(){
+  const done=active().filter(e=>e.outcome!=null);
+  const n=done.length;
+  let miss=0,part=0,hit=0,conf=0,rej=0;
+  done.forEach(e=>{
+    if(e.verdict==="빗나감")miss++;else if(e.verdict==="일부")part++;else if(e.verdict==="적중")hit++;
+    conf+=Number(e.predictionConfidence)||0;
+    if(e.reclassRejected)rej++;
+  });
+  const missRate=n?Math.round(((miss+0.5*part)/n)*100):0;
+  const hitRate=n?Math.round(((hit+0.5*part)/n)*100):0;
+  const avgConf=n?Math.round(conf/n):0;
+  return {n,miss,part,hit,missRate,hitRate,avgConf,rej};
+}
+
+/* ---------- render ---------- */
+const app=document.getElementById("app");
+function render(){
+  if(state.view==="home")app.innerHTML=viewHome();
+  else if(state.view==="new")app.innerHTML=viewNew();
+  else if(state.view==="review")app.innerHTML=viewReview();
+  else if(state.view==="detail")app.innerHTML=viewDetail();
+  window.scrollTo(0,0);
+  wire();
+}
+
+function viewHome(){
+  const s=stats();
+  const list=active();
+  const need=list.filter(e=>statusOf(e)==="need");
+  const wait=list.filter(e=>statusOf(e)==="wait");
+  const done=list.filter(e=>statusOf(e)==="done").sort((a,b)=>(b.outcomeRecordedAt||0)-(a.outcomeRecordedAt||0));
+  const archived=data.filter(e=>e.archived);
+
+  let board;
+  if(s.n===0){
+    board=`<div class="board"><div class="lead">아직 장부가 비어 있다</div>
+      <div class="calverdict">예측을 적고, 며칠 뒤 실제로 무슨 일이 있었는지 적어라. 빗나간 예측이 여기 쌓인다 — 머리가 조용히 버리지 못하게.</div></div>`;
+  }else{
+    board=`<div class="board">
+      <div class="lead">장부 결산</div>
+      <div class="statrow">
+        <div class="stat"><div class="num">${s.n}</div><div class="lab">결산한 실험</div></div>
+        <div class="stat"><div class="num olive">${s.missRate}%</div><div class="lab">예측이 빗나감</div></div>
+        <div class="stat"><div class="num clay">${s.rej}</div><div class="lab">기각한 재분류</div></div>
+      </div>
+      <div class="cal">
+        <div class="ct">믿음이 예언한 불행 vs 실제로 일어난 일</div>
+        <div class="calrow"><span class="tag">믿음의 확신</span><span class="barwrap"><span class="bar belief" style="width:${s.avgConf}%"></span></span><span class="pct">${s.avgConf}%</span></div>
+        <div class="calrow"><span class="tag">실제 적중</span><span class="barwrap"><span class="bar real" style="width:${s.hitRate}%"></span></span><span class="pct">${s.hitRate}%</span></div>
+        ${s.avgConf>s.hitRate?`<div class="calverdict">믿음은 평균 <b>${s.avgConf}%</b> 확신했지만, 실제로 그 일이 일어난 건 <b>${s.hitRate}%</b>뿐이다. 그 차이가 조작된 장부다.</div>`:`<div class="calverdict">아직 격차를 말하기엔 표본이 적다. 실험을 더 쌓아라.</div>`}
+      </div>
+    </div>`;
+  }
+
+  return `
+  <header>
+    <div><h1 class="serif">반증 장부</h1><div class="sub">머리 밖에 두는 정직한 회계</div></div>
+    <div class="topbtns">
+      ${canInstall?`<button class="ghost accent" data-act="install">설치</button>`:""}
+      <button class="ghost" data-act="export">내보내기</button>
+      <button class="ghost" data-act="import">가져오기</button>
+    </div>
+  </header>
+  ${storageBlocked?`<div class="warn">저장 공간에 기록하지 못했다. 데이터가 사라질 수 있으니 지금 내보내기로 백업해라.</div>`:""}
+  ${board}
+  <button class="add" data-act="new">작은 실험 시작하기<small>되돌릴 수 있는 선택 하나. 빨리, 안 따지고.</small></button>
+  ${need.length?`<div class="group"><div class="ghd alert">확인할 때 됐다</div>${need.map(card).join("")}</div>`:""}
+  ${wait.length?`<div class="group"><div class="ghd">결과를 기다리는 중</div>${wait.map(card).join("")}</div>`:""}
+  ${done.length?`<div class="group"><div class="ghd">결산 완료</div>${done.map(card).join("")}</div>`:""}
+  ${(list.length===0)?`<div class="empty"><div class="big serif">첫 장을 펴라</div><p>믿음이 무겁게 만드는 선택 하나를 골라<br>지금 바로 정해버려라.</p></div>`:""}
+  ${archived.length?`<button class="ghost" data-act="togglearch" style="margin:6px auto 0;display:block">${state.showArchive?"보관함 닫기":`보관함 (${archived.length})`}</button>`:""}
+  ${state.showArchive&&archived.length?`<div class="group" style="margin-top:12px"><div class="ghd">보관함</div>${archived.map(card).join("")}</div>`:""}
+  <div class="note">모든 기록은 이 기기에만 저장된다. 정기적으로 내보내기로 백업해라.</div>
+  `;
+}
+
+function card(e){
+  const st=statusOf(e);
+  let badge="";
+  if(e.archived)badge=`<span class="badge b-wait">보관됨</span>`;
+  else if(st==="need")badge=`<span class="badge b-need">확인 필요</span>`;
+  else if(st==="wait")badge=`<span class="badge b-wait">대기 · ${fmtDate(e.reviewDate)} 확인</span>`;
+  else{
+    const m={"빗나감":["b-miss","빗나감"],"일부":["b-part","일부 맞음"],"적중":["b-hit","적중"]}[e.verdict]||["b-wait","결산"];
+    badge=`<span class="badge ${m[0]}">${m[1]}</span>`;
+  }
+  return `<div class="card" data-open="${e.id}">
+    <div class="choice">${esc(e.choice)||"(제목 없음)"}</div>
+    <div class="meta">${badge}${e.reclassRejected?`<span class="dot">·</span><span class="rejmark">재분류 기각함</span>`:""}</div>
+  </div>`;
+}
+
+function viewNew(){
+  return `<div class="screen">
+    <button class="back" data-act="home">← 장부</button>
+    <div class="stitle serif">작은 실험</div>
+    <div class="shint">되돌릴 수 있는 선택 하나. 빨리, 안 따지고 정해라. 정하기 전에 믿음이 뭐라고 예언하는지 적고 잠가라.</div>
+    <div class="field"><label>무슨 선택을 했나</label><input type="text" id="f-choice" placeholder="예: 답장을 미루지 않고 바로 보냈다"></div>
+    <div class="field"><label>되돌리는 법 <span style="font-weight:400;color:var(--ink-3)">(선택)</span></label><div class="desc">정 아쉬우면 어떻게 무를 수 있나</div><input type="text" id="f-rev" placeholder="예: 다시 메시지 보내 정정하면 된다"></div>
+    <div class="field"><label>믿음의 예측</label><div class="desc">이러면 손해 보고, 후회되고, 내가 미끄러진다 — 머리가 하는 말 그대로</div><textarea id="f-pred" placeholder="예: 성급해 보여서 무시당하고 후회할 거다"></textarea></div>
+    <div class="field"><label>이 예측을 얼마나 믿나</label>
+      <div class="confwrap"><input type="range" id="f-conf" min="0" max="100" value="70" step="5"><span class="confval" id="conf-val">70%</span></div>
+    </div>
+    <div class="field"><label>며칠 뒤 확인할까</label><input type="date" id="f-date" value="${plusDays(3)}"></div>
+    <button class="save" data-act="savenew">적고 잠그기 🔒</button>
+    <div class="note">저장하면 예측과 확신도는 잠긴다. 나중에 부드럽게 못 고친다 — 그게 핵심이다.</div>
+  </div>`;
+}
+
+function viewReview(){
+  const e=data.find(x=>x.id===state.id);
+  if(!e)return viewHome();
+  return `<div class="screen">
+    <button class="back" data-act="home">← 장부</button>
+    <div class="stitle serif">결과 적기</div>
+    <div class="shint">실제로 무슨 일이 있었나. 예측은 아래에 잠겨 있다 — 고치지 말고 마주봐라.</div>
+    <div class="locked">
+      <span class="lk">🔒 ${fmtDate(ymd(new Date(e.createdAt)))}에 잠김</span>
+      <div class="ll">믿음의 예측</div>
+      <div class="lv">${esc(e.prediction)||"(없음)"}</div>
+      <div class="lconf">당시 확신 ${e.predictionConfidence}%</div>
+    </div>
+    <div class="field"><label>실제로 일어난 일</label><textarea id="r-outcome" placeholder="며칠 지나 보니 실제로는…"></textarea></div>
+    <div class="field"><label>예측과 견줘보면</label>
+      <div class="vpick" id="r-verdict">
+        <button data-v="빗나감">빗나감</button>
+        <button data-v="일부">일부 맞음</button>
+        <button data-v="적중">적중</button>
+      </div>
+    </div>
+    <div class="field"><label>되돌렸나</label>
+      <div class="toggle" id="r-revert"><button data-rv="no" aria-pressed="true">아니오</button><button data-rv="yes">되돌렸다</button></div>
+    </div>
+    <div id="reclass-slot"></div>
+    <button class="save" data-act="saveoutcome">결산 기록하기</button>
+  </div>`;
+}
+
+function reclassBlock(){
+  return `<div class="reclass">
+    <div class="rh">지금 이걸 깎아내리는 목소리가 있나?</div>
+    <div class="rd">"운이었어 / 너무 작아서 안 쳐줌" 같은 말이 떠오르면 그대로 적어라. 그게 조작된 장부가 증거를 또 버리려는 순간이다.</div>
+    <textarea id="r-reclass" placeholder="예: 이건 그냥 운이 좋았던 거고, 원래 별일 아니었어"></textarea>
+    <input type="text" id="r-why" placeholder="왜 이건 진짜 증거인가 — 한 줄" style="width:100%;background:var(--paper);border:1px solid var(--line);border-radius:10px;padding:11px 12px;margin-top:9px">
+    <button class="rejbtn" id="r-reject" aria-pressed="false">이 재분류를 기각한다</button>
+  </div>`;
+}
+
+function viewDetail(){
+  const e=data.find(x=>x.id===state.id);
+  if(!e)return viewHome();
+  const st=statusOf(e);
+  if(st!=="done"){
+    return `<div class="screen"><button class="back" data-act="home">← 장부</button>
+      <div class="stitle serif">대기 중인 실험</div>
+      <div class="locked"><span class="lk">🔒</span><div class="ll">믿음의 예측</div><div class="lv">${esc(e.prediction)}</div><div class="lconf">확신 ${e.predictionConfidence}% · ${fmtDate(e.reviewDate)} 확인 예정</div></div>
+      <div class="dsec"><div class="dl">선택</div><div class="dv">${esc(e.choice)}</div></div>
+      ${e.reversibleNote?`<div class="dsec"><div class="dl">되돌리는 법</div><div class="dv">${esc(e.reversibleNote)}</div></div>`:""}
+      <button class="save" data-act="goreview">${st==="need"?"결과 적기":"미리 결과 적기"}</button>
+      <div class="detailbtns"><button class="danger" data-act="archive">보관</button></div>
+    </div>`;
+  }
+  const vmap={"빗나감":"빗나갔다","일부":"일부만 맞았다","적중":"적중했다"};
+  return `<div class="screen">
+    <button class="back" data-act="home">← 장부</button>
+    <div class="stitle serif">${esc(e.choice)}</div>
+    <div class="shint">${vmap[e.verdict]||""} · 확신 ${e.predictionConfidence}%</div>
+    <div class="compare">
+      <div class="col"><div class="ch">🔒 믿음의 예측</div><div class="cb">${esc(e.prediction)}</div></div>
+      <div class="col real"><div class="ch">실제로 일어난 일</div><div class="cb">${esc(e.outcome)}</div></div>
+    </div>
+    ${e.didRevert?`<div class="dsec"><div class="dl">되돌렸나</div><div class="dv">되돌렸다</div></div>`:`<div class="dsec"><div class="dl">되돌렸나</div><div class="dv">아니오 — 그대로 두고도 괜찮았다</div></div>`}
+    ${e.reclassThought?`<div class="rejcard"><div class="dl" style="color:var(--olive);font-weight:600;margin-bottom:6px">${e.reclassRejected?"✓ 기각한 재분류":"포착한 재분류"}</div><div class="dv" style="text-decoration:${e.reclassRejected?"line-through":"none"};opacity:${e.reclassRejected?".7":"1"}">${esc(e.reclassThought)}</div>${e.reclassRejectionNote?`<div class="dv" style="margin-top:8px;color:var(--olive)">→ ${esc(e.reclassRejectionNote)}</div>`:""}</div>`:""}
+    ${e.reversibleNote?`<div class="dsec"><div class="dl">되돌리는 법(당시 메모)</div><div class="dv">${esc(e.reversibleNote)}</div></div>`:""}
+    <div class="detailbtns">
+      <button class="danger" data-act="archive">보관</button>
+      <button class="danger" data-act="delete">영구 삭제</button>
+    </div>
+  </div>`;
+}
+
+/* ---------- wiring ---------- */
+let draft={verdict:null,revert:"no",rejected:false};
+function wire(){
+  app.querySelectorAll("[data-open]").forEach(el=>el.onclick=()=>{state.view="detail";state.id=el.dataset.open;render();});
+  app.querySelectorAll("[data-act]").forEach(el=>el.onclick=()=>handle(el.dataset.act));
+
+  if(state.view==="new"){
+    const r=document.getElementById("f-conf");
+    if(r)r.oninput=()=>document.getElementById("conf-val").textContent=r.value+"%";
+  }
+  if(state.view==="review"){
+    draft={verdict:null,revert:"no",rejected:false};
+    const vp=document.getElementById("r-verdict");
+    vp.querySelectorAll("button").forEach(b=>b.onclick=()=>{
+      draft.verdict=b.dataset.v;
+      vp.querySelectorAll("button").forEach(x=>x.setAttribute("aria-pressed",x===b?"true":"false"));
+      const slot=document.getElementById("reclass-slot");
+      if(draft.verdict==="빗나감"||draft.verdict==="일부"){slot.innerHTML=reclassBlock();bindReject();}
+      else slot.innerHTML="";
+    });
+    const rv=document.getElementById("r-revert");
+    rv.querySelectorAll("button").forEach(b=>b.onclick=()=>{
+      draft.revert=b.dataset.rv;
+      rv.querySelectorAll("button").forEach(x=>x.setAttribute("aria-pressed",x===b?"true":"false"));
+    });
+  }
+}
+function bindReject(){
+  const rb=document.getElementById("r-reject");
+  if(rb)rb.onclick=()=>{draft.rejected=!draft.rejected;rb.setAttribute("aria-pressed",draft.rejected?"true":"false");rb.textContent=draft.rejected?"이 재분류를 기각했다":"이 재분류를 기각한다";};
+}
+
+function handle(act){
+  if(act==="home"){state.view="home";state.id=null;render();}
+  else if(act==="new"){state.view="new";render();}
+  else if(act==="togglearch"){state.showArchive=!state.showArchive;render();}
+  else if(act==="goreview"){state.view="review";render();}
+  else if(act==="export")doExport();
+  else if(act==="import")document.getElementById("importer").click();
+  else if(act==="install")doInstall();
+  else if(act==="savenew")saveNew();
+  else if(act==="saveoutcome")saveOutcome();
+  else if(act==="archive"){const e=data.find(x=>x.id===state.id);if(e){e.archived=true;persist();state.view="home";render();}}
+  else if(act==="delete"){
+    if(confirm("이 기록을 영구히 삭제한다. 되돌릴 수 없다. 진행할까?")){
+      data=data.filter(x=>x.id!==state.id);persist();state.view="home";render();
+    }
+  }
+}
+
+function saveNew(){
+  const choice=document.getElementById("f-choice").value.trim();
+  const pred=document.getElementById("f-pred").value.trim();
+  if(!choice&&!pred){alert("선택이나 예측 중 하나는 적어야 한다.");return;}
+  const e={
+    id:uid(),createdAt:Date.now(),
+    choice,reversibleNote:document.getElementById("f-rev").value.trim(),
+    prediction:pred,predictionConfidence:Number(document.getElementById("f-conf").value),
+    reviewDate:document.getElementById("f-date").value||plusDays(3),
+    outcome:null,outcomeRecordedAt:null,verdict:null,didRevert:null,
+    reclassThought:"",reclassRejected:false,reclassRejectionNote:"",
+    archived:false,editLog:[]
+  };
+  data.unshift(e);persist();
+  state.view="home";render();
+}
+
+function saveOutcome(){
+  const e=data.find(x=>x.id===state.id);
+  if(!e)return;
+  const outcome=document.getElementById("r-outcome").value.trim();
+  if(!outcome){alert("실제로 무슨 일이 있었는지 적어야 한다.");return;}
+  if(!draft.verdict){alert("예측과 견줘 평결을 골라라.");return;}
+  e.outcome=outcome;
+  e.outcomeRecordedAt=Date.now();
+  e.verdict=draft.verdict;
+  e.didRevert=draft.revert==="yes";
+  const rc=document.getElementById("r-reclass");
+  const why=document.getElementById("r-why");
+  e.reclassThought=rc?rc.value.trim():"";
+  e.reclassRejectionNote=why?why.value.trim():"";
+  e.reclassRejected=e.reclassThought?draft.rejected:false;
+  persist();
+  state.view="detail";render();
+}
+
+/* ---------- export / import ---------- */
+function doExport(){
+  const blob=new Blob([JSON.stringify(data,null,2)],{type:"application/json"});
+  const url=URL.createObjectURL(blob);
+  const a=document.createElement("a");
+  a.href=url;a.download=`반증장부_${todayStr()}.json`;
+  document.body.appendChild(a);a.click();a.remove();
+  setTimeout(()=>URL.revokeObjectURL(url),1000);
+}
+document.getElementById("importer").onchange=function(ev){
+  const file=ev.target.files[0];if(!file)return;
+  const reader=new FileReader();
+  reader.onload=()=>{
+    try{
+      const parsed=JSON.parse(reader.result);
+      if(!Array.isArray(parsed))throw new Error("형식 오류");
+      if(data.length && !confirm(`${parsed.length}건을 불러온다. 현재 ${data.length}건을 덮어쓸까?`))return;
+      data=parsed.map(x=>Object.assign({
+        id:uid(),createdAt:Date.now(),choice:"",reversibleNote:"",prediction:"",
+        predictionConfidence:0,reviewDate:todayStr(),outcome:null,outcomeRecordedAt:null,
+        verdict:null,didRevert:null,reclassThought:"",reclassRejected:false,
+        reclassRejectionNote:"",archived:false,editLog:[]
+      },x));
+      persist();state.view="home";render();
+    }catch(err){alert("불러오지 못했다. 올바른 JSON 파일인지 확인해라.");}
+    ev.target.value="";
+  };
+  reader.readAsText(file);
+};
+
+/* ---------- PWA: 설치 & 서비스워커 ---------- */
+async function doInstall(){
+  if(!deferredPrompt){
+    alert("이미 설치돼 있거나, 브라우저 메뉴의 '홈 화면에 추가'로 설치할 수 있다.");
+    return;
+  }
+  deferredPrompt.prompt();
+  try{await deferredPrompt.userChoice;}catch(e){}
+  deferredPrompt=null;canInstall=false;
+  if(state.view==="home")render();
+}
+window.addEventListener("beforeinstallprompt",ev=>{
+  ev.preventDefault();
+  deferredPrompt=ev;canInstall=true;
+  if(state.view==="home")render();
+});
+window.addEventListener("appinstalled",()=>{
+  deferredPrompt=null;canInstall=false;
+  if(state.view==="home")render();
+});
+if("serviceWorker" in navigator){
+  window.addEventListener("load",()=>{navigator.serviceWorker.register("sw.js").catch(()=>{});});
+}
+
+render();
+</script>
+</body>
+</html>
