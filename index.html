@@ -37,13 +37,14 @@ body{
 button{font-family:inherit;cursor:pointer;border:none;background:none;color:inherit}
 input,textarea,select{font-family:inherit;font-size:16px;color:var(--ink)}
 textarea{resize:vertical;width:100%}
+:focus-visible{outline:2px solid var(--clay);outline-offset:2px;border-radius:6px}
 
 /* header */
 header{padding:22px 0 14px;display:flex;align-items:baseline;justify-content:space-between;gap:10px;flex-wrap:wrap}
 header h1{font-family:"Fraunces",serif;font-weight:600;font-size:30px;letter-spacing:-.01em;line-height:1}
 header .sub{font-size:13px;color:var(--ink-2);margin-top:5px;font-style:italic;font-family:"Fraunces",serif}
-.topbtns{display:flex;gap:6px}
-.ghost{font-size:12.5px;color:var(--ink-2);padding:7px 11px;border:1px solid var(--line);border-radius:999px;background:var(--card)}
+.topbtns{display:flex;gap:6px;flex-wrap:wrap}
+.ghost{font-size:12.5px;color:var(--ink-2);padding:7px 11px;border:1px solid var(--line);border-radius:999px;background:var(--card);min-height:36px}
 .ghost:hover{border-color:var(--ink-3);color:var(--ink)}
 .ghost.accent{color:var(--clay);border-color:var(--clay-soft)}
 
@@ -66,6 +67,17 @@ header .sub{font-size:13px;color:var(--ink-2);margin-top:5px;font-style:italic;f
 .calrow .pct{width:42px;flex:none;text-align:right;font-family:"Fraunces",serif;font-weight:500}
 .calverdict{font-size:12.5px;color:var(--ink-2);margin-top:11px;line-height:1.5}
 .calverdict b{color:var(--ink);font-weight:600}
+/* trend sparkline */
+.trend{margin-top:14px;border-top:1px dashed var(--line);padding-top:12px}
+.trend .ct{font-size:11.5px;color:var(--ink-3);margin-bottom:4px}
+.trend .ct span{opacity:.85}
+.spark{width:100%;height:36px;display:block;margin:2px 0}
+.spark polyline{fill:none;stroke:var(--clay);stroke-width:1.6;vector-effect:non-scaling-stroke;stroke-linejoin:round;stroke-linecap:round}
+.spark .area{fill:rgba(182,90,64,.08);stroke:none}
+.spark .zero{stroke:var(--olive);stroke-width:1;vector-effect:non-scaling-stroke;stroke-dasharray:3 3;opacity:.7}
+.spark .dot{fill:var(--clay)}
+.trendnow{font-size:12px;color:var(--ink-2);margin-top:3px}
+.trendnow b{font-family:"Fraunces",serif;color:var(--clay)}
 
 /* primary add */
 .add{display:block;width:100%;background:var(--clay);color:#fff;font-size:15px;font-weight:600;padding:15px;border-radius:var(--r);box-shadow:var(--shadow);margin-bottom:22px;letter-spacing:.01em}
@@ -79,9 +91,9 @@ header .sub{font-size:13px;color:var(--ink-2);margin-top:5px;font-style:italic;f
 .ghd.alert{color:var(--clay)} .ghd.alert::after{background:var(--clay-soft)}
 
 /* cards */
-.card{background:var(--card);border:1px solid var(--line);border-radius:var(--r);box-shadow:var(--shadow);padding:14px 15px;margin-bottom:9px;cursor:pointer;transition:transform .08s ease,border-color .15s}
+.card{display:block;width:100%;text-align:left;background:var(--card);border:1px solid var(--line);border-radius:var(--r);box-shadow:var(--shadow);padding:14px 15px;margin-bottom:9px;cursor:pointer;transition:transform .08s ease,border-color .15s}
 .card:hover{border-color:var(--ink-3)} .card:active{transform:scale(.995)}
-.card .choice{font-size:15px;font-weight:500;line-height:1.4}
+.card .choice{font-size:15px;font-weight:500;line-height:1.4;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
 .card .meta{display:flex;align-items:center;gap:8px;margin-top:8px;flex-wrap:wrap}
 .badge{font-size:11px;padding:3px 9px;border-radius:999px;font-weight:600;letter-spacing:.01em}
 .b-wait{background:#EFE9DC;color:var(--ink-2)}
@@ -92,6 +104,7 @@ header .sub{font-size:13px;color:var(--ink-2);margin-top:5px;font-style:italic;f
 .card .date{font-size:11.5px;color:var(--ink-3)}
 .dot{color:var(--ink-3);font-size:11px}
 .rejmark{font-size:11px;color:var(--olive);font-weight:600}
+.editmark{font-size:11px;color:var(--ink-3);font-style:italic}
 
 /* empty */
 .empty{text-align:center;padding:36px 18px;color:var(--ink-2)}
@@ -100,7 +113,7 @@ header .sub{font-size:13px;color:var(--ink-2);margin-top:5px;font-style:italic;f
 
 /* form screen */
 .screen{padding-top:6px}
-.back{font-size:13px;color:var(--ink-2);padding:7px 0;margin-bottom:6px;display:inline-flex;gap:5px;align-items:center}
+.back{font-size:13px;color:var(--ink-2);padding:7px 0;margin-bottom:6px;display:inline-flex;gap:5px;align-items:center;min-height:38px}
 .back:hover{color:var(--ink)}
 .stitle{font-family:"Fraunces",serif;font-size:23px;font-weight:600;margin-bottom:4px}
 .shint{font-size:13px;color:var(--ink-2);margin-bottom:20px;line-height:1.5}
@@ -110,6 +123,9 @@ header .sub{font-size:13px;color:var(--ink-2);margin-top:5px;font-style:italic;f
 .field input[type=text],.field textarea,.field input[type=date]{width:100%;background:var(--paper);border:1px solid var(--line);border-radius:10px;padding:11px 12px}
 .field input:focus,.field textarea:focus{outline:none;border-color:var(--clay)}
 .field textarea{min-height:62px}
+.presets{display:flex;gap:6px;margin-top:8px;flex-wrap:wrap}
+.presets button{font-size:12px;color:var(--ink-2);border:1px solid var(--line);background:var(--paper);border-radius:999px;padding:6px 12px;min-height:34px}
+.presets button:hover{border-color:var(--clay);color:var(--clay)}
 .confwrap{display:flex;align-items:center;gap:12px}
 .confwrap input[type=range]{flex:1;accent-color:var(--clay)}
 .confval{font-family:"Fraunces",serif;font-weight:600;font-size:18px;width:58px;text-align:right;color:var(--clay)}
@@ -123,20 +139,28 @@ header .sub{font-size:13px;color:var(--ink-2);margin-top:5px;font-style:italic;f
 .locked .ll{font-size:11.5px;color:var(--ink-3);margin-bottom:5px}
 .locked .lv{font-size:14.5px;line-height:1.5}
 .locked .lconf{font-size:12px;color:var(--ink-2);margin-top:8px}
+/* edit-locked box */
+.lockedit{background:#F0EADD;border:1px solid var(--line);border-radius:12px;padding:13px 14px;margin-bottom:18px}
+.lockedit .ll{font-size:12px;color:var(--ink-3);margin-bottom:6px;display:flex;gap:8px;align-items:center}
+.lockedit .lv{font-size:14.5px;line-height:1.5}
+.lockedit .lconf{font-size:12px;color:var(--ink-2);margin-top:8px}
+.lockedit textarea{width:100%;background:var(--paper);border:1px solid var(--line);border-radius:10px;padding:11px 12px;min-height:62px}
+.unlockbtn{margin-top:11px;font-size:12.5px;color:var(--olive);border:1px solid var(--olive-soft);background:var(--paper);border-radius:999px;padding:9px 14px;min-height:38px}
+.unlockbtn:hover{background:var(--olive-soft);color:#41452f}
 
 /* verdict picker */
 .vpick{display:flex;gap:8px}
-.vpick button{flex:1;border:1px solid var(--line);background:var(--paper);border-radius:10px;padding:11px 4px;font-size:13px;font-weight:600;color:var(--ink-2)}
+.vpick button{flex:1;border:1px solid var(--line);background:var(--paper);border-radius:10px;padding:11px 4px;font-size:13px;font-weight:600;color:var(--ink-2);min-height:48px}
 .vpick button[aria-pressed=true]{border-color:var(--clay);background:var(--clay-soft);color:#7a3522}
 .toggle{display:flex;gap:8px}
-.toggle button{flex:1;border:1px solid var(--line);background:var(--paper);border-radius:10px;padding:10px;font-size:13px;font-weight:600;color:var(--ink-2)}
+.toggle button{flex:1;border:1px solid var(--line);background:var(--paper);border-radius:10px;padding:10px;font-size:13px;font-weight:600;color:var(--ink-2);min-height:48px}
 .toggle button[aria-pressed=true]{border-color:var(--olive);background:var(--olive-soft);color:#41452f}
 
 /* reclass block */
 .reclass{background:#FAF4EA;border:1px dashed var(--clay-soft);border-radius:12px;padding:15px;margin-top:6px}
 .reclass .rh{font-size:13px;font-weight:600;margin-bottom:5px}
 .reclass .rd{font-size:12px;color:var(--ink-2);margin-bottom:11px;line-height:1.5}
-.rejbtn{width:100%;background:var(--olive);color:#fff;font-weight:600;padding:11px;border-radius:10px;margin-top:11px;font-size:14px}
+.rejbtn{width:100%;background:var(--olive);color:#fff;font-weight:600;padding:11px;border-radius:10px;margin-top:11px;font-size:14px;min-height:48px}
 .rejbtn[aria-pressed=true]{background:#41452f}
 .rejbtn[aria-pressed=true]::before{content:"✓ "}
 
@@ -150,11 +174,13 @@ header .sub{font-size:13px;color:var(--ink-2);margin-top:5px;font-style:italic;f
 .dsec .dl{font-size:12px;color:var(--ink-3);margin-bottom:4px}
 .dsec .dv{font-size:14px;line-height:1.5;white-space:pre-wrap;word-break:break-word}
 .rejcard{background:#F2F4EA;border:1px solid var(--olive-soft);border-radius:12px;padding:13px;margin-bottom:15px}
-.danger{font-size:12.5px;color:var(--ink-3);padding:8px 12px;border:1px solid var(--line);border-radius:999px;background:var(--card)}
+.danger{font-size:12.5px;color:var(--ink-3);padding:8px 12px;border:1px solid var(--line);border-radius:999px;background:var(--card);min-height:38px}
 .danger:hover{color:var(--clay);border-color:var(--clay-soft)}
-.detailbtns{display:flex;gap:8px;justify-content:flex-end;margin-top:22px}
+.detailbtns{display:flex;gap:8px;justify-content:flex-end;margin-top:22px;flex-wrap:wrap}
 .note{font-size:11.5px;color:var(--ink-3);text-align:center;margin-top:18px;line-height:1.6}
-.warn{background:var(--clay-soft);color:#7a3522;font-size:12.5px;padding:10px 13px;border-radius:10px;margin-bottom:14px}
+.warn{background:var(--clay-soft);color:#7a3522;font-size:12.5px;padding:10px 13px;border-radius:10px;margin-bottom:14px;line-height:1.5}
+.warn.soft{background:#F3ECDD;color:var(--ink-2)}
+.warn b{font-weight:600}
 </style>
 </head>
 <body>
@@ -164,19 +190,29 @@ header .sub{font-size:13px;color:var(--ink-2);margin-top:5px;font-style:italic;f
 <script>
 "use strict";
 const KEY="counter-ledger-v1";
+const MKEY="counter-ledger-meta-v1";
 let data=load();
+let meta=loadMeta();
 let state={view:"home",id:null,showArchive:false};
 let deferredPrompt=null;   // PWA 설치 프롬프트
 let canInstall=false;
+let formDirty=false;       // 작성 중 이탈 보호
+let editUnlocked=false;    // 수정 화면에서 잠금 필드 해제 여부
 
 function load(){
   try{const raw=localStorage.getItem(KEY);return raw?JSON.parse(raw):[];}
   catch(e){return [];}
 }
+function loadMeta(){
+  try{return JSON.parse(localStorage.getItem(MKEY))||{};}catch(e){return {};}
+}
+function saveMeta(){try{localStorage.setItem(MKEY,JSON.stringify(meta));}catch(e){}}
 let storageBlocked=false;
 function persist(){
   try{localStorage.setItem(KEY,JSON.stringify(data));storageBlocked=false;}
   catch(e){storageBlocked=true;}
+  syncSchedule();
+  updateBadge();
 }
 function uid(){return (crypto.randomUUID?crypto.randomUUID():"id-"+Date.now()+"-"+Math.random().toString(36).slice(2));}
 function todayStr(){const d=new Date();return ymd(d);}
@@ -184,6 +220,7 @@ function ymd(d){return d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0"
 function plusDays(n){const d=new Date();d.setDate(d.getDate()+n);return ymd(d);}
 function esc(s){return (s==null?"":String(s)).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));}
 function fmtDate(s){if(!s)return "";const[y,m,d]=s.split("-");return `${+m}월 ${+d}일`;}
+function edited(e){return e.editLog&&e.editLog.length>0;}
 
 function statusOf(e){
   if(e.outcome!=null) return "done";
@@ -207,28 +244,131 @@ function stats(){
   return {n,miss,part,hit,missRate,hitRate,avgConf,rej};
 }
 
+/* ---------- IndexedDB (서비스워커가 읽는 알림 일정) ---------- */
+function idb(){
+  return new Promise((res,rej)=>{
+    const r=indexedDB.open("counter-ledger",1);
+    r.onupgradeneeded=()=>{r.result.createObjectStore("kv",{keyPath:"k"});};
+    r.onsuccess=()=>res(r.result);
+    r.onerror=()=>rej(r.error);
+  });
+}
+async function idbSet(k,v){
+  try{const db=await idb();await new Promise((res,rej)=>{
+    const tx=db.transaction("kv","readwrite");tx.objectStore("kv").put({k,v});
+    tx.oncomplete=res;tx.onerror=()=>rej(tx.error);
+  });}catch(e){}
+}
+function syncSchedule(){
+  const pend=active().filter(e=>e.outcome==null).map(e=>({id:e.id,choice:e.choice,reviewDate:e.reviewDate}));
+  idbSet("schedule",pend);
+}
+
+/* ---------- 휴대폰 알림 ---------- */
+function updateBadge(){
+  try{
+    const n=active().filter(e=>statusOf(e)==="need").length;
+    if(navigator.setAppBadge){ if(n>0)navigator.setAppBadge(n);else if(navigator.clearAppBadge)navigator.clearAppBadge(); }
+  }catch(e){}
+}
+async function registerPeriodicSync(){
+  try{
+    const reg=await navigator.serviceWorker.ready;
+    if(reg&&"periodicSync" in reg){
+      let st={state:"granted"};
+      try{st=await navigator.permissions.query({name:"periodic-background-sync"});}catch(e){}
+      if(st.state!=="denied"){
+        await reg.periodicSync.register("cl-review-check",{minInterval:12*60*60*1000});
+      }
+    }
+  }catch(e){}
+}
+async function enableNotifications(){
+  if(!("Notification" in window)){alert("이 브라우저는 알림을 지원하지 않는다.");return;}
+  let perm=Notification.permission;
+  if(perm!=="granted"){try{perm=await Notification.requestPermission();}catch(e){perm="denied";}}
+  if(perm!=="granted"){alert("알림 권한이 거부됐다. 브라우저(또는 휴대폰 설정)에서 이 사이트의 알림을 허용해야 한다.");return;}
+  meta.notifyEnabled=true;saveMeta();
+  syncSchedule();
+  await registerPeriodicSync();
+  try{const reg=await navigator.serviceWorker.ready;reg.active&&reg.active.postMessage({type:"check-reviews"});}catch(e){}
+  alert("알림을 켰다. 확인일이 되면 휴대폰 알림으로 알려준다.\n(홈 화면에 설치해두면 더 안정적으로 도착한다.)");
+  render();
+}
+async function disableNotifications(){
+  meta.notifyEnabled=false;saveMeta();
+  try{
+    const reg=await navigator.serviceWorker.ready;
+    if(reg&&"periodicSync" in reg)await reg.periodicSync.unregister("cl-review-check");
+  }catch(e){}
+  render();
+}
+function toggleNotify(){ if(meta.notifyEnabled)disableNotifications();else enableNotifications(); }
+
 /* ---------- render ---------- */
 const app=document.getElementById("app");
 function render(){
   if(state.view==="home")app.innerHTML=viewHome();
   else if(state.view==="new")app.innerHTML=viewNew();
   else if(state.view==="review")app.innerHTML=viewReview();
+  else if(state.view==="edit")app.innerHTML=viewEdit();
   else if(state.view==="detail")app.innerHTML=viewDetail();
   window.scrollTo(0,0);
   wire();
+  updateBadge();
+}
+
+function trendSvg(){
+  const done=active().filter(e=>e.outcome!=null).sort((a,b)=>(a.outcomeRecordedAt||0)-(b.outcomeRecordedAt||0));
+  if(done.length<2)return "";
+  let cConf=0,cHit=0;const pts=[];
+  done.forEach((e,i)=>{
+    cConf+=Number(e.predictionConfidence)||0;
+    cHit+=(e.verdict==="적중"?1:e.verdict==="일부"?0.5:0)*100;
+    pts.push(cConf/(i+1)-cHit/(i+1));
+  });
+  const n=pts.length,W=100,H=34,pad=2;
+  const max=Math.max(40,...pts.map(v=>Math.abs(v)));
+  const yOf=g=>(H/2-(g/max)*(H/2-pad)).toFixed(1);
+  const xOf=i=>((i/(n-1))*W).toFixed(1);
+  const line=pts.map((g,i)=>xOf(i)+","+yOf(g)).join(" ");
+  const area=`0,${H/2} `+line+` ${W},${H/2}`;
+  const last=Math.round(pts[n-1]);
+  return `<div class="trend">
+    <div class="ct">보정 격차 추세 <span>· 0(올리브 선)에 가까울수록 장부가 믿음을 교정 중</span></div>
+    <svg class="spark" viewBox="0 0 ${W} ${H}" preserveAspectRatio="none" role="img" aria-label="보정 격차 추세 그래프, 현재 ${last} 퍼센트포인트">
+      <polygon class="area" points="${area}"></polygon>
+      <line class="zero" x1="0" y1="${H/2}" x2="${W}" y2="${H/2}"></line>
+      <polyline points="${line}"></polyline>
+      <circle class="dot" cx="${xOf(n-1)}" cy="${yOf(pts[n-1])}" r="1.8" vector-effect="non-scaling-stroke"></circle>
+    </svg>
+    <div class="trendnow">현재 격차 <b>${last}%p</b> <span style="color:var(--ink-3)">(확신 − 적중)</span></div>
+  </div>`;
+}
+
+function backupNote(){
+  if(data.length===0)return "";
+  const last=meta.lastExportAt;
+  if(!last)return `<div class="warn soft">아직 한 번도 백업하지 않았다. 기록은 이 기기에만 있다 — <b>내보내기</b>로 지금 백업해라.</div>`;
+  const days=Math.floor((Date.now()-last)/86400000);
+  if(days>=7)return `<div class="warn soft">마지막 백업 <b>${days}일 전</b>. 새 기록이 쌓였다면 다시 <b>내보내기</b> 해라.</div>`;
+  return "";
 }
 
 function viewHome(){
   const s=stats();
   const list=active();
-  const need=list.filter(e=>statusOf(e)==="need");
-  const wait=list.filter(e=>statusOf(e)==="wait");
+  const cmpDate=(a,b)=>(a.reviewDate||"").localeCompare(b.reviewDate||"");
+  const need=list.filter(e=>statusOf(e)==="need").sort(cmpDate);
+  const wait=list.filter(e=>statusOf(e)==="wait").sort(cmpDate);
   const done=list.filter(e=>statusOf(e)==="done").sort((a,b)=>(b.outcomeRecordedAt||0)-(a.outcomeRecordedAt||0));
   const archived=data.filter(e=>e.archived);
 
-  let board;
-  if(s.n===0){
-    board=`<div class="board"><div class="lead">아직 장부가 비어 있다</div>
+  let board="";
+  if(list.length===0){
+    board="";
+  }else if(s.n===0){
+    board=`<div class="board"><div class="lead">아직 결산한 실험이 없다</div>
       <div class="calverdict">예측을 적고, 며칠 뒤 실제로 무슨 일이 있었는지 적어라. 빗나간 예측이 여기 쌓인다 — 머리가 조용히 버리지 못하게.</div></div>`;
   }else{
     board=`<div class="board">
@@ -244,19 +384,26 @@ function viewHome(){
         <div class="calrow"><span class="tag">실제 적중</span><span class="barwrap"><span class="bar real" style="width:${s.hitRate}%"></span></span><span class="pct">${s.hitRate}%</span></div>
         ${s.avgConf>s.hitRate?`<div class="calverdict">믿음은 평균 <b>${s.avgConf}%</b> 확신했지만, 실제로 그 일이 일어난 건 <b>${s.hitRate}%</b>뿐이다. 그 차이가 조작된 장부다.</div>`:`<div class="calverdict">아직 격차를 말하기엔 표본이 적다. 실험을 더 쌓아라.</div>`}
       </div>
+      ${trendSvg()}
     </div>`;
   }
+
+  const notifyBtn=("Notification" in window)
+    ? `<button class="ghost ${meta.notifyEnabled?"accent":""}" data-act="notify" aria-pressed="${meta.notifyEnabled?"true":"false"}">${meta.notifyEnabled?"알림 켜짐":"알림"}</button>`
+    : "";
 
   return `
   <header>
     <div><h1 class="serif">반증 장부</h1><div class="sub">머리 밖에 두는 정직한 회계</div></div>
     <div class="topbtns">
       ${canInstall?`<button class="ghost accent" data-act="install">설치</button>`:""}
+      ${notifyBtn}
       <button class="ghost" data-act="export">내보내기</button>
       <button class="ghost" data-act="import">가져오기</button>
     </div>
   </header>
   ${storageBlocked?`<div class="warn">저장 공간에 기록하지 못했다. 데이터가 사라질 수 있으니 지금 내보내기로 백업해라.</div>`:""}
+  ${backupNote()}
   ${board}
   <button class="add" data-act="new">작은 실험 시작하기<small>되돌릴 수 있는 선택 하나. 빨리, 안 따지고.</small></button>
   ${need.length?`<div class="group"><div class="ghd alert">확인할 때 됐다</div>${need.map(card).join("")}</div>`:""}
@@ -279,9 +426,9 @@ function card(e){
     const m={"빗나감":["b-miss","빗나감"],"일부":["b-part","일부 맞음"],"적중":["b-hit","적중"]}[e.verdict]||["b-wait","결산"];
     badge=`<span class="badge ${m[0]}">${m[1]}</span>`;
   }
-  return `<div class="card" data-open="${e.id}">
+  return `<div class="card" role="button" tabindex="0" data-open="${e.id}" aria-label="${esc(e.choice)||"제목 없음"} 자세히 보기">
     <div class="choice">${esc(e.choice)||"(제목 없음)"}</div>
-    <div class="meta">${badge}${e.reclassRejected?`<span class="dot">·</span><span class="rejmark">재분류 기각함</span>`:""}</div>
+    <div class="meta">${badge}${e.reclassRejected?`<span class="dot">·</span><span class="rejmark">재분류 기각함</span>`:""}${edited(e)?`<span class="dot">·</span><span class="editmark">수정됨</span>`:""}</div>
   </div>`;
 }
 
@@ -290,15 +437,17 @@ function viewNew(){
     <button class="back" data-act="home">← 장부</button>
     <div class="stitle serif">작은 실험</div>
     <div class="shint">되돌릴 수 있는 선택 하나. 빨리, 안 따지고 정해라. 정하기 전에 믿음이 뭐라고 예언하는지 적고 잠가라.</div>
-    <div class="field"><label>무슨 선택을 했나</label><input type="text" id="f-choice" placeholder="예: 답장을 미루지 않고 바로 보냈다"></div>
-    <div class="field"><label>되돌리는 법 <span style="font-weight:400;color:var(--ink-3)">(선택)</span></label><div class="desc">정 아쉬우면 어떻게 무를 수 있나</div><input type="text" id="f-rev" placeholder="예: 다시 메시지 보내 정정하면 된다"></div>
-    <div class="field"><label>믿음의 예측</label><div class="desc">이러면 손해 보고, 후회되고, 내가 미끄러진다 — 머리가 하는 말 그대로</div><textarea id="f-pred" placeholder="예: 성급해 보여서 무시당하고 후회할 거다"></textarea></div>
-    <div class="field"><label>이 예측을 얼마나 믿나</label>
-      <div class="confwrap"><input type="range" id="f-conf" min="0" max="100" value="70" step="5"><span class="confval" id="conf-val">70%</span></div>
+    <div class="field"><label for="f-choice">무슨 선택을 했나</label><input type="text" id="f-choice" placeholder="예: 답장을 미루지 않고 바로 보냈다"></div>
+    <div class="field"><label for="f-rev">되돌리는 법 <span style="font-weight:400;color:var(--ink-3)">(선택)</span></label><div class="desc">정 아쉬우면 어떻게 무를 수 있나</div><input type="text" id="f-rev" placeholder="예: 다시 메시지 보내 정정하면 된다"></div>
+    <div class="field"><label for="f-pred">믿음의 예측</label><div class="desc">이러면 손해 보고, 후회되고, 내가 미끄러진다 — 머리가 하는 말 그대로</div><textarea id="f-pred" placeholder="예: 성급해 보여서 무시당하고 후회할 거다"></textarea></div>
+    <div class="field"><label for="f-conf">이 예측을 얼마나 믿나</label>
+      <div class="confwrap"><input type="range" id="f-conf" min="0" max="100" value="70" step="5" aria-label="예측 확신도 퍼센트"><span class="confval" id="conf-val">70%</span></div>
     </div>
-    <div class="field"><label>며칠 뒤 확인할까</label><input type="date" id="f-date" value="${plusDays(3)}"></div>
+    <div class="field"><label for="f-date">며칠 뒤 확인할까</label><input type="date" id="f-date" value="${plusDays(3)}">
+      <div class="presets" data-target="f-date"><button type="button" data-days="1">내일</button><button type="button" data-days="3">3일</button><button type="button" data-days="7">1주</button><button type="button" data-days="14">2주</button></div>
+    </div>
     <button class="save" data-act="savenew">적고 잠그기 🔒</button>
-    <div class="note">저장하면 예측과 확신도는 잠긴다. 나중에 부드럽게 못 고친다 — 그게 핵심이다.</div>
+    <div class="note">저장하면 예측과 확신도는 잠긴다. 일반 경로에선 못 고친다 — 그게 핵심이다.</div>
   </div>`;
 }
 
@@ -315,16 +464,16 @@ function viewReview(){
       <div class="lv">${esc(e.prediction)||"(없음)"}</div>
       <div class="lconf">당시 확신 ${e.predictionConfidence}%</div>
     </div>
-    <div class="field"><label>실제로 일어난 일</label><textarea id="r-outcome" placeholder="며칠 지나 보니 실제로는…"></textarea></div>
+    <div class="field"><label for="r-outcome">실제로 일어난 일</label><textarea id="r-outcome" placeholder="며칠 지나 보니 실제로는…"></textarea></div>
     <div class="field"><label>예측과 견줘보면</label>
       <div class="vpick" id="r-verdict">
-        <button data-v="빗나감">빗나감</button>
-        <button data-v="일부">일부 맞음</button>
-        <button data-v="적중">적중</button>
+        <button type="button" data-v="빗나감">빗나감</button>
+        <button type="button" data-v="일부">일부 맞음</button>
+        <button type="button" data-v="적중">적중</button>
       </div>
     </div>
     <div class="field"><label>되돌렸나</label>
-      <div class="toggle" id="r-revert"><button data-rv="no" aria-pressed="true">아니오</button><button data-rv="yes">되돌렸다</button></div>
+      <div class="toggle" id="r-revert"><button type="button" data-rv="no" aria-pressed="true">아니오</button><button type="button" data-rv="yes" aria-pressed="false">되돌렸다</button></div>
     </div>
     <div id="reclass-slot"></div>
     <button class="save" data-act="saveoutcome">결산 기록하기</button>
@@ -337,7 +486,37 @@ function reclassBlock(){
     <div class="rd">"운이었어 / 너무 작아서 안 쳐줌" 같은 말이 떠오르면 그대로 적어라. 그게 조작된 장부가 증거를 또 버리려는 순간이다.</div>
     <textarea id="r-reclass" placeholder="예: 이건 그냥 운이 좋았던 거고, 원래 별일 아니었어"></textarea>
     <input type="text" id="r-why" placeholder="왜 이건 진짜 증거인가 — 한 줄" style="width:100%;background:var(--paper);border:1px solid var(--line);border-radius:10px;padding:11px 12px;margin-top:9px">
-    <button class="rejbtn" id="r-reject" aria-pressed="false">이 재분류를 기각한다</button>
+    <button type="button" class="rejbtn" id="r-reject" aria-pressed="false">이 재분류를 기각한다</button>
+  </div>`;
+}
+
+function viewEdit(){
+  const e=data.find(x=>x.id===state.id);
+  if(!e)return viewHome();
+  return `<div class="screen">
+    <button class="back" data-act="back-detail">← 취소</button>
+    <div class="stitle serif">실험 수정</div>
+    <div class="shint">선택·되돌리는 법·확인일은 자유롭게 고칠 수 있다. 예측과 확신도는 잠겨 있다 — 정말 필요할 때(오타·오기록)만 잠금을 풀어 고치고, 그 변경은 '(수정됨)'으로 영구히 남는다.</div>
+    <div class="field"><label for="e-choice">무슨 선택을 했나</label><input type="text" id="e-choice" value="${esc(e.choice)}"></div>
+    <div class="field"><label for="e-rev">되돌리는 법 (선택)</label><input type="text" id="e-rev" value="${esc(e.reversibleNote)}"></div>
+    <div class="field"><label for="e-date">확인 예정일</label><input type="date" id="e-date" value="${esc(e.reviewDate)}">
+      <div class="presets" data-target="e-date"><button type="button" data-days="1">내일</button><button type="button" data-days="3">3일</button><button type="button" data-days="7">1주</button><button type="button" data-days="14">2주</button></div>
+    </div>
+    <div class="lockedit">
+      <div class="ll">🔒 믿음의 예측 <span>(잠김)</span></div>
+      <div id="e-pred-ro">
+        <div class="lv">${esc(e.prediction)||"(없음)"}</div>
+        <div class="lconf">확신 ${e.predictionConfidence}%</div>
+        <button type="button" class="unlockbtn" id="e-unlock">잠금 풀고 수정</button>
+      </div>
+      <div id="e-pred-edit" style="display:none">
+        <div class="warn soft" style="margin:4px 0 10px">예측을 사후에 고치면 장부의 정직성이 흔들린다. 변경 사실은 '(수정됨)'으로 표시된다.</div>
+        <textarea id="e-pred">${esc(e.prediction)}</textarea>
+        <div class="confwrap" style="margin-top:10px"><input type="range" id="e-conf" min="0" max="100" step="5" value="${e.predictionConfidence}" aria-label="예측 확신도 퍼센트"><span class="confval" id="e-conf-val">${e.predictionConfidence}%</span></div>
+      </div>
+    </div>
+    ${edited(e)?`<div class="note">이미 ${e.editLog.length}번 수정된 기록이다.</div>`:""}
+    <button class="save" data-act="saveedit">수정 저장</button>
   </div>`;
 }
 
@@ -347,19 +526,19 @@ function viewDetail(){
   const st=statusOf(e);
   if(st!=="done"){
     return `<div class="screen"><button class="back" data-act="home">← 장부</button>
-      <div class="stitle serif">대기 중인 실험</div>
+      <div class="stitle serif">대기 중인 실험${edited(e)?` <span class="editmark">(수정됨)</span>`:""}</div>
       <div class="locked"><span class="lk">🔒</span><div class="ll">믿음의 예측</div><div class="lv">${esc(e.prediction)}</div><div class="lconf">확신 ${e.predictionConfidence}% · ${fmtDate(e.reviewDate)} 확인 예정</div></div>
       <div class="dsec"><div class="dl">선택</div><div class="dv">${esc(e.choice)}</div></div>
       ${e.reversibleNote?`<div class="dsec"><div class="dl">되돌리는 법</div><div class="dv">${esc(e.reversibleNote)}</div></div>`:""}
       <button class="save" data-act="goreview">${st==="need"?"결과 적기":"미리 결과 적기"}</button>
-      <div class="detailbtns"><button class="danger" data-act="archive">보관</button></div>
+      <div class="detailbtns"><button class="danger" data-act="edit">수정</button><button class="danger" data-act="archive">보관</button></div>
     </div>`;
   }
   const vmap={"빗나감":"빗나갔다","일부":"일부만 맞았다","적중":"적중했다"};
   return `<div class="screen">
     <button class="back" data-act="home">← 장부</button>
     <div class="stitle serif">${esc(e.choice)}</div>
-    <div class="shint">${vmap[e.verdict]||""} · 확신 ${e.predictionConfidence}%</div>
+    <div class="shint">${vmap[e.verdict]||""} · 확신 ${e.predictionConfidence}%${edited(e)?" · (수정됨)":""}</div>
     <div class="compare">
       <div class="col"><div class="ch">🔒 믿음의 예측</div><div class="cb">${esc(e.prediction)}</div></div>
       <div class="col real"><div class="ch">실제로 일어난 일</div><div class="cb">${esc(e.outcome)}</div></div>
@@ -376,19 +555,58 @@ function viewDetail(){
 
 /* ---------- wiring ---------- */
 let draft={verdict:null,revert:"no",rejected:false};
+function openDetail(id){
+  if(!leaveGuard())return;
+  state.view="detail";state.id=id;render();
+}
+function leaveGuard(){
+  if(["new","review","edit"].includes(state.view)&&formDirty){
+    if(!confirm("작성 중인 내용이 사라진다. 나갈까?"))return false;
+  }
+  formDirty=false;
+  return true;
+}
 function wire(){
-  app.querySelectorAll("[data-open]").forEach(el=>el.onclick=()=>{state.view="detail";state.id=el.dataset.open;render();});
+  app.querySelectorAll("[data-open]").forEach(el=>{
+    el.onclick=()=>openDetail(el.dataset.open);
+    el.onkeydown=(ev)=>{if(ev.key==="Enter"||ev.key===" "){ev.preventDefault();openDetail(el.dataset.open);}};
+  });
   app.querySelectorAll("[data-act]").forEach(el=>el.onclick=()=>handle(el.dataset.act));
+
+  // 확인일 빠른 프리셋
+  app.querySelectorAll(".presets").forEach(p=>{
+    const target=p.dataset.target;
+    p.querySelectorAll("button").forEach(b=>b.onclick=()=>{
+      const el=document.getElementById(target);
+      if(el){el.value=plusDays(Number(b.dataset.days));formDirty=true;}
+    });
+  });
+
+  // 작성 중 이탈 보호
+  if(["new","review","edit"].includes(state.view)){
+    const scr=app.querySelector(".screen");
+    if(scr)scr.addEventListener("input",()=>{formDirty=true;});
+  }
 
   if(state.view==="new"){
     const r=document.getElementById("f-conf");
     if(r)r.oninput=()=>document.getElementById("conf-val").textContent=r.value+"%";
   }
+  if(state.view==="edit"){
+    const u=document.getElementById("e-unlock");
+    if(u)u.onclick=()=>{
+      editUnlocked=true;formDirty=true;
+      document.getElementById("e-pred-ro").style.display="none";
+      document.getElementById("e-pred-edit").style.display="block";
+    };
+    const r=document.getElementById("e-conf");
+    if(r)r.oninput=()=>document.getElementById("e-conf-val").textContent=r.value+"%";
+  }
   if(state.view==="review"){
     draft={verdict:null,revert:"no",rejected:false};
     const vp=document.getElementById("r-verdict");
     vp.querySelectorAll("button").forEach(b=>b.onclick=()=>{
-      draft.verdict=b.dataset.v;
+      draft.verdict=b.dataset.v;formDirty=true;
       vp.querySelectorAll("button").forEach(x=>x.setAttribute("aria-pressed",x===b?"true":"false"));
       const slot=document.getElementById("reclass-slot");
       if(draft.verdict==="빗나감"||draft.verdict==="일부"){slot.innerHTML=reclassBlock();bindReject();}
@@ -396,7 +614,7 @@ function wire(){
     });
     const rv=document.getElementById("r-revert");
     rv.querySelectorAll("button").forEach(b=>b.onclick=()=>{
-      draft.revert=b.dataset.rv;
+      draft.revert=b.dataset.rv;formDirty=true;
       rv.querySelectorAll("button").forEach(x=>x.setAttribute("aria-pressed",x===b?"true":"false"));
     });
   }
@@ -407,15 +625,19 @@ function bindReject(){
 }
 
 function handle(act){
-  if(act==="home"){state.view="home";state.id=null;render();}
-  else if(act==="new"){state.view="new";render();}
+  if(act==="home"){if(!leaveGuard())return;state.view="home";state.id=null;render();}
+  else if(act==="back-detail"){if(!leaveGuard())return;state.view="detail";render();}
+  else if(act==="new"){if(!leaveGuard())return;state.view="new";formDirty=false;render();}
   else if(act==="togglearch"){state.showArchive=!state.showArchive;render();}
-  else if(act==="goreview"){state.view="review";render();}
+  else if(act==="goreview"){state.view="review";formDirty=false;render();}
+  else if(act==="edit"){state.view="edit";editUnlocked=false;formDirty=false;render();}
   else if(act==="export")doExport();
   else if(act==="import")document.getElementById("importer").click();
   else if(act==="install")doInstall();
+  else if(act==="notify")toggleNotify();
   else if(act==="savenew")saveNew();
   else if(act==="saveoutcome")saveOutcome();
+  else if(act==="saveedit")saveEdit();
   else if(act==="archive"){const e=data.find(x=>x.id===state.id);if(e){e.archived=true;persist();state.view="home";render();}}
   else if(act==="delete"){
     if(confirm("이 기록을 영구히 삭제한다. 되돌릴 수 없다. 진행할까?")){
@@ -438,7 +660,24 @@ function saveNew(){
     archived:false,editLog:[]
   };
   data.unshift(e);persist();
-  state.view="home";render();
+  formDirty=false;state.view="home";render();
+}
+
+function saveEdit(){
+  const e=data.find(x=>x.id===state.id);
+  if(!e)return;
+  e.choice=document.getElementById("e-choice").value.trim();
+  e.reversibleNote=document.getElementById("e-rev").value.trim();
+  e.reviewDate=document.getElementById("e-date").value||e.reviewDate;
+  if(editUnlocked){
+    const newPred=document.getElementById("e-pred").value.trim();
+    const newConf=Number(document.getElementById("e-conf").value);
+    if(!Array.isArray(e.editLog))e.editLog=[];
+    if(newPred!==e.prediction){e.editLog.push({field:"prediction",at:Date.now()});e.prediction=newPred;}
+    if(newConf!==e.predictionConfidence){e.editLog.push({field:"predictionConfidence",at:Date.now()});e.predictionConfidence=newConf;}
+  }
+  persist();
+  formDirty=false;state.view="detail";render();
 }
 
 function saveOutcome(){
@@ -454,10 +693,10 @@ function saveOutcome(){
   const rc=document.getElementById("r-reclass");
   const why=document.getElementById("r-why");
   e.reclassThought=rc?rc.value.trim():"";
-  e.reclassRejectionNote=why?why.value.trim():"";
   e.reclassRejected=e.reclassThought?draft.rejected:false;
+  e.reclassRejectionNote=e.reclassRejected?(why?why.value.trim():""):"";
   persist();
-  state.view="detail";render();
+  formDirty=false;state.view="detail";render();
 }
 
 /* ---------- export / import ---------- */
@@ -468,6 +707,16 @@ function doExport(){
   a.href=url;a.download=`반증장부_${todayStr()}.json`;
   document.body.appendChild(a);a.click();a.remove();
   setTimeout(()=>URL.revokeObjectURL(url),1000);
+  meta.lastExportAt=Date.now();saveMeta();
+  if(state.view==="home")render();
+}
+function normalizeEntry(x){
+  return Object.assign({
+    id:uid(),createdAt:Date.now(),choice:"",reversibleNote:"",prediction:"",
+    predictionConfidence:0,reviewDate:todayStr(),outcome:null,outcomeRecordedAt:null,
+    verdict:null,didRevert:null,reclassThought:"",reclassRejected:false,
+    reclassRejectionNote:"",archived:false,editLog:[]
+  },x);
 }
 document.getElementById("importer").onchange=function(ev){
   const file=ev.target.files[0];if(!file)return;
@@ -476,13 +725,15 @@ document.getElementById("importer").onchange=function(ev){
     try{
       const parsed=JSON.parse(reader.result);
       if(!Array.isArray(parsed))throw new Error("형식 오류");
-      if(data.length && !confirm(`${parsed.length}건을 불러온다. 현재 ${data.length}건을 덮어쓸까?`))return;
-      data=parsed.map(x=>Object.assign({
-        id:uid(),createdAt:Date.now(),choice:"",reversibleNote:"",prediction:"",
-        predictionConfidence:0,reviewDate:todayStr(),outcome:null,outcomeRecordedAt:null,
-        verdict:null,didRevert:null,reclassThought:"",reclassRejected:false,
-        reclassRejectionNote:"",archived:false,editLog:[]
-      },x));
+      const incoming=parsed.map(normalizeEntry);
+      if(data.length){
+        if(!confirm(`가져온 ${incoming.length}건을 현재 ${data.length}건과 합친다.\n(같은 항목은 가져온 내용으로 갱신, 나머지는 그대로 둔다)\n\n계속할까?`)){ev.target.value="";return;}
+        const byId=new Map(data.map(e=>[e.id,e]));
+        incoming.forEach(e=>byId.set(e.id,e));
+        data=Array.from(byId.values());
+      }else{
+        data=incoming;
+      }
       persist();state.view="home";render();
     }catch(err){alert("불러오지 못했다. 올바른 JSON 파일인지 확인해라.");}
     ev.target.value="";
@@ -510,10 +761,24 @@ window.addEventListener("appinstalled",()=>{
   deferredPrompt=null;canInstall=false;
   if(state.view==="home")render();
 });
+window.addEventListener("beforeunload",ev=>{
+  if(formDirty){ev.preventDefault();ev.returnValue="";}
+});
+document.addEventListener("visibilitychange",()=>{
+  if(document.visibilityState==="visible")updateBadge();
+});
 if("serviceWorker" in navigator){
-  window.addEventListener("load",()=>{navigator.serviceWorker.register("sw.js").catch(()=>{});});
+  window.addEventListener("load",()=>{
+    navigator.serviceWorker.register("sw.js").then(()=>{
+      if(meta.notifyEnabled)registerPeriodicSync();
+    }).catch(()=>{});
+  });
 }
 
+/* ---------- init ---------- */
+syncSchedule();
+const _params=new URLSearchParams(location.search);
+if(_params.get("action")==="new"){state.view="new";try{history.replaceState({},"",location.pathname);}catch(e){}}
 render();
 </script>
 </body>

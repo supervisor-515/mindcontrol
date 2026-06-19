@@ -1,4 +1,5 @@
 {
+  "id": "counter-ledger",
   "name": "반증 장부",
   "short_name": "반증 장부",
   "description": "머리 밖에 두는 정직한 회계 — 믿음의 예측을 잠그고 며칠 뒤 실제 결과와 대조하는 장부.",
@@ -11,6 +12,15 @@
   "background_color": "#F4EFE6",
   "theme_color": "#B65A40",
   "categories": ["productivity", "lifestyle"],
+  "shortcuts": [
+    {
+      "name": "작은 실험 시작하기",
+      "short_name": "새 실험",
+      "description": "예측을 적고 잠그는 새 실험을 바로 시작",
+      "url": "./?action=new",
+      "icons": [{ "src": "icon-192.png", "sizes": "192x192", "type": "image/png" }]
+    }
+  ],
   "icons": [
     { "src": "icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any" },
     { "src": "icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any" },
